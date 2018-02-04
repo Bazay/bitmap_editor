@@ -1,15 +1,20 @@
-class BitmapEditor
-  def run(file)
-    return puts 'please provide correct file' if file.nil? || !File.exist?(file)
+require_relative './input_parser'
 
-    File.open(file).each do |line|
-      line = line.chomp
-      case line
-      when 'S'
-        puts 'There is no image'
-      else
-        puts 'unrecognised command :('
-      end
-    end
+class BitmapEditor
+  attr_reader :input_parser
+
+  def initialize path
+    @input_parser = InputParser.new path
   end
+
+  def run
+    return puts 'Please provide correct file' unless input_parser.file_present?
+
+    load_commands
+  end
+
+  private
+
+    def load_commands
+    end
 end

@@ -45,3 +45,7 @@ OWOOO
 **`BitmapEditor`**
 
 This class is the entry point into the program. It is responsible for all logic relating to running the program.
+
+**`InputParser`**
+
+This class is responsible for reading from the input file and ensuring the commands within the file can be interpreted by the program.
