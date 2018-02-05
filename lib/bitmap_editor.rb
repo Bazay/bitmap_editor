@@ -3,7 +3,7 @@ require_relative './input_parser'
 class BitmapEditor
   attr_reader :input_parser
 
-  def initialize path
+  def initialize(path)
     @input_parser = InputParser.new path
   end
 
@@ -15,6 +15,5 @@ class BitmapEditor
 
   private
 
-    def load_commands
-    end
+  def load_commands; end
 end

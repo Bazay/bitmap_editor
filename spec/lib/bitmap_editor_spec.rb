@@ -12,7 +12,7 @@ RSpec.describe BitmapEditor do
     subject { editor.run }
 
     context 'when input file provided' do
-      let(:parser) { double 'BitmapEditor::InputParser', file_present?: file_present }
+      let(:parser) { double 'InputParser', file_present?: file_present }
       let(:file_present) { true }
 
       before { allow(editor).to receive(:input_parser).and_return parser }

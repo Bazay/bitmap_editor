@@ -1,6 +1,10 @@
 folder = File.expand_path './..',__dir__
 $:.unshift(folder) unless $:.include?(folder)
 
+require 'pry'
+require 'rspec/collection_matchers'
+require 'rspec/its'
+
 spec_dir = File.expand_path File.dirname(__FILE__)
 Dir[File.join(spec_dir, 'support/**/*.rb')].each { |file| require file }
 

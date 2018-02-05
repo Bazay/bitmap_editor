@@ -25,6 +25,9 @@ Metrics/MethodLength:
 Metrics/ModuleLength:
   Max: 139
 
+Metrics/LineLength:
+  Max: 121
+
 # Offense count: 10
 RSpec/AnyInstance:
   Exclude:
