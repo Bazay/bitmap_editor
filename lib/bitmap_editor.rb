@@ -1,6 +1,5 @@
 require_relative './input_parser'
 require_relative './mixins/error_logging'
-require 'pry'
 
 class BitmapEditor
   attr_reader :input_parser, :commands, :image_grid
