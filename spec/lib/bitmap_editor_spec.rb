@@ -70,10 +70,10 @@ RSpec.describe BitmapEditor do
     context "when executing 'V' command" do
       subject(:image) { editor.image_grid }
 
-      let(:file) { array_to_file(["I #{width} #{height}", "V #{x_coordinate} #{y1_coordinate} #{y1_coordinate} #{colour}"]) }
+      let(:file) { array_to_file(["I #{width} #{height}", "V #{x_coordinate} #{y1_coordinate} #{y2_coordinate} #{colour}"]) }
       let(:path) { file.path }
-      let(:width) { rand(1..10) }
-      let(:height) { rand(1..10) }
+      let(:width) { rand(1..10) + 1 }
+      let(:height) { rand(1..10) + 1 }
       let(:x_coordinate) { rand(1..width) }
       let(:y1_coordinate) { rand(1..height-1) }
       let(:y2_coordinate) { rand(y1_coordinate..height) }
