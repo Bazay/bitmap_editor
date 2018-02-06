@@ -87,6 +87,7 @@ class BitmapEditor
   end
 
   def show_image_grid
+    return if @image_grid.nil?
     puts @image_grid.map { |row| row.join }.join('\n')
   end
 

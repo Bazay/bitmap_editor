@@ -26,6 +26,13 @@ RSpec.describe BitmapEditor do
       end
     end
 
+    shared_examples_for 'image grid is not initialised' do
+      let(:file) { array_to_file(file_content) }
+      let(:file_content) { [command] }
+
+      it { expect { run }.not_to raise_error }
+    end
+
     context "when executing 'I' command" do
       subject(:image) { editor.image_grid }
 
@@ -43,7 +50,8 @@ RSpec.describe BitmapEditor do
     context "when executing 'L' command" do
       subject(:image) { editor.image_grid }
 
-      let(:file) { array_to_file(["I #{width} #{height}", "L #{x_coordinate} #{y_coordinate} #{colour}"]) }
+      let(:file) { array_to_file(["I #{width} #{height}", command]) }
+      let(:command) { "L #{x_coordinate} #{y_coordinate} #{colour}" }
       let(:path) { file.path }
       let(:width) { rand(1..10) }
       let(:height) { rand(1..10) }
@@ -51,9 +59,15 @@ RSpec.describe BitmapEditor do
       let(:y_coordinate) { rand(1..height) }
       let(:colour) { 'C' }
 
-      before { run }
+      it_behaves_like 'image grid is not initialised'
 
-      it { expect(image[y_coordinate - 1][x_coordinate - 1]).to eq colour }
+      context 'when checking image grid' do
+        subject(:image) { editor.image_grid }
+
+        before { run }
+
+        it { expect(image[y_coordinate - 1][x_coordinate - 1]).to eq colour }
+      end
 
       context 'when x out of bounds' do
         let(:x_coordinate) { width + 1 }
@@ -68,10 +82,8 @@ RSpec.describe BitmapEditor do
     end
 
     context "when executing 'V' command" do
-      subject(:image) { editor.image_grid }
-
-      let(:file) { array_to_file(file_contents) }
-      let(:file_contents) { ["I #{width} #{height}", "V #{x_coordinate} #{y1_coordinate} #{y2_coordinate} #{colour}"] }
+      let(:file) { array_to_file(["I #{width} #{height}", command]) }
+      let(:command) { "V #{x_coordinate} #{y1_coordinate} #{y2_coordinate} #{colour}" }
       let(:path) { file.path }
       let(:width) { rand(1..10) }
       let(:height) { rand(1..10) + 1 }
@@ -80,20 +92,24 @@ RSpec.describe BitmapEditor do
       let(:y2_coordinate) { rand(y1_coordinate..height) }
       let(:colour) { 'C' }
 
-      before { run }
+      it_behaves_like 'image grid is not initialised'
 
-      it 'colours all vertical blocks' do
-        for y_coordinate in y1_coordinate..y2_coordinate
-          expect(image[y_coordinate - 1][x_coordinate - 1]).to eq colour
+      context 'when checking image grid' do
+        subject(:image) { editor.image_grid }
+
+        before { run }
+
+        it 'colours all vertical blocks' do
+          for y_coordinate in y1_coordinate..y2_coordinate
+            expect(image[y_coordinate - 1][x_coordinate - 1]).to eq colour
+          end
         end
       end
     end
 
     context "when executing 'H' command" do
-      subject(:image) { editor.image_grid }
-
-      let(:file) { array_to_file(file_contents) }
-      let(:file_contents) { ["I #{width} #{height}", "H #{x1_coordinate} #{x2_coordinate} #{y_coordinate} #{colour}"] }
+      let(:file) { array_to_file(["I #{width} #{height}", command]) }
+      let(:command) { "H #{x1_coordinate} #{x2_coordinate} #{y_coordinate} #{colour}" }
       let(:path) { file.path }
       let(:width) { rand(1..10) + 1 }
       let(:height) { rand(1..10) }
@@ -102,19 +118,24 @@ RSpec.describe BitmapEditor do
       let(:y_coordinate) { rand(1..height) }
       let(:colour) { 'C' }
 
-      before { run }
+      it_behaves_like 'image grid is not initialised'
 
-      it 'colours all horizontal blocks' do
-        for x_coordinate in x1_coordinate..x2_coordinate
-          expect(image[y_coordinate - 1][x_coordinate - 1]).to eq colour
+      context 'when checking image grid' do
+        subject(:image) { editor.image_grid }
+
+        before { run }
+
+        it 'colours all horizontal blocks' do
+          for x_coordinate in x1_coordinate..x2_coordinate
+            expect(image[y_coordinate - 1][x_coordinate - 1]).to eq colour
+          end
         end
       end
     end
 
     context "when executing 'C' command" do
-      subject(:image) { editor.image_grid }
-
-      let(:file) { array_to_file(["I #{width} #{height}", "L #{x_coordinate} #{y_coordinate} #{colour}", 'C']) }
+      let(:file) { array_to_file(["I #{width} #{height}", "L #{x_coordinate} #{y_coordinate} #{colour}", command]) }
+      let(:command) { 'C' }
       let(:path) { file.path }
       let(:width) { rand(1..10) }
       let(:height) { rand(1..10) }
@@ -123,15 +144,22 @@ RSpec.describe BitmapEditor do
       let(:colour) { 'C' }
       let(:expected_grid) { Array.new(height) { Array.new(width, BitmapEditor::DEFAULT_BLOCK_COLOUR) } }
 
-      before { run }
+      it_behaves_like 'image grid is not initialised'
 
-      it { is_expected.to match_array expected_grid }
+      context 'when checking image grid' do
+        subject(:image) { editor.image_grid }
+
+        before { run }
+
+        it { is_expected.to match_array expected_grid }
+      end
     end
 
     context "when executing 'S' command" do
       subject(:image) { editor.image_grid }
 
-      let(:file) { array_to_file(["I #{width} #{height}", "L #{x_coordinate} #{y_coordinate} #{colour}", 'S']) }
+      let(:file) { array_to_file(["I #{width} #{height}", "L #{x_coordinate} #{y_coordinate} #{colour}", command]) }
+      let(:command) { 'S' }
       let(:path) { file.path }
       let(:width) { rand(1..10) }
       let(:height) { rand(1..10) }
@@ -144,6 +172,8 @@ RSpec.describe BitmapEditor do
         grid
       end
       let(:expected_output) { "#{grid.map { |row| row.join }.join('\n')}\n" }
+
+      it_behaves_like 'image grid is not initialised'
 
       it { expect { run }.to output(expected_output).to_stdout }
     end
