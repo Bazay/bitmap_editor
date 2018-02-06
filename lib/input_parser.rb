@@ -1,12 +1,12 @@
 require_relative './command'
 
-class InputParser < Struct.new(:file_path)
+class InputParser
+  attr_reader :file_path
+
   COMMAND_DELIMITER = ' '.freeze
 
-  def initialize(*args)
-    super
-    @file = nil
-    @commands = []
+  def initialize file_path
+    @file_path = file_path
   end
 
   def file_present?
