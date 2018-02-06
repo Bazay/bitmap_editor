@@ -32,16 +32,16 @@ RSpec.describe InputParser do
   describe '#parse' do
     subject(:parse) { parser.parse }
 
-    def build_command key, args
+    def build_command(key, args)
       Command.new key, args
     end
 
     let(:expected_result) do
       [
-        build_command('I', ['5', '6']),
-        build_command('L', ['1', '3', 'A']),
-        build_command('V', ['2', '3', '6', 'W']),
-        build_command('H', ['3', '5', '2', 'Z']),
+        build_command('I', %w[5 6]),
+        build_command('L', %w[1 3 A]),
+        build_command('V', %w[2 3 6 W]),
+        build_command('H', %w[3 5 2 Z]),
         build_command('S', [])
       ]
     end
@@ -52,7 +52,7 @@ RSpec.describe InputParser do
       let(:file) { array_to_file(file_content) }
       let(:file_content) { ['I 5 6', invalid_line] }
       let(:invalid_line) { '' }
-      let(:expected_result) { [build_command('I', ['5', '6']), nil] }
+      let(:expected_result) { [build_command('I', %w[5 6]), nil] }
       let(:path) { file.path }
 
       it 'nil for blank line' do

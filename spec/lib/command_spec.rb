@@ -61,7 +61,6 @@ RSpec.describe Command do
     it_behaves_like 'invalid string argument not a char'
   end
 
-
   context "when command 'I'" do
     let(:command_key) { 'I' }
     let(:arguments) { [random_numeric_argument, random_numeric_argument] }
