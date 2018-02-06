@@ -143,7 +143,7 @@ RSpec.describe BitmapEditor do
         grid[y_coordinate - 1][x_coordinate - 1] = colour
         grid
       end
-      let(:expected_output) { grid.map { |row| row.join }.join('\n') }
+      let(:expected_output) { "#{grid.map { |row| row.join }.join('\n')}\n" }
 
       it { expect { run }.to output(expected_output).to_stdout }
     end

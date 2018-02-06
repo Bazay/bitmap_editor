@@ -48,6 +48,7 @@ class BitmapEditor
     when 'V' then colour_vertical_pixels(*command.parsed_arguments)
     when 'H' then colour_horizontal_pixels(*command.parsed_arguments)
     when 'C' then clear_image_grid
+    when 'S' then show_image_grid
     end
   end
 
@@ -83,6 +84,10 @@ class BitmapEditor
   def clear_image_grid
     return if @image_grid.nil?
     @image_grid = Array.new(image_height) { Array.new(image_width, DEFAULT_BLOCK_COLOUR) }
+  end
+
+  def show_image_grid
+    puts @image_grid.map { |row| row.join }.join('\n')
   end
 
   def coordinate_to_array_index(coordinate, limit)
