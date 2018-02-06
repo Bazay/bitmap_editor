@@ -1,5 +1,7 @@
-class InputParser < Struct.new(:path)
-  LINE_DELIMITER = ' '.freeze
+require_relative './command'
+
+class InputParser < Struct.new(:file_path)
+  COMMAND_DELIMITER = ' '.freeze
 
   def initialize(*args)
     super
@@ -8,17 +10,15 @@ class InputParser < Struct.new(:path)
   end
 
   def file_present?
-    !path.empty? && file_exists?
+    !file_path.empty? && file_exists?
   end
 
-  def parse!
-    # Do sum tings
-    File.open(file_path).each_with_index do |line, index|
-      line = line.chomp.split LINE_DELIMITER
-      case parsed_line(line).first
-      when 'S'
-        puts 'There is no image'
-      end
+  def parse
+    return unless file_present?
+
+    File.open(file_path).each_with_index.map do |line, index|
+      command_key, argument_string = line.chomp.split(COMMAND_DELIMITER, 2)
+      command_key.to_s.empty? ? nil : build_command(command_key, argument_string)
     end
   end
 
@@ -29,6 +29,11 @@ class InputParser < Struct.new(:path)
   private
 
   def file_exists?
-    File.exist? path
+    File.exist?(file_path)
+  end
+
+  def build_command(command_key, argument_string)
+    arguments = argument_string&.split(COMMAND_DELIMITER) || []
+    Command.new(command_key, arguments)
   end
 end

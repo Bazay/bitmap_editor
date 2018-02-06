@@ -1,4 +1,5 @@
 require 'lib/input_parser'
+require 'lib/command'
 
 RSpec.describe InputParser do
   subject { parser }
@@ -28,21 +29,35 @@ RSpec.describe InputParser do
     end
   end
 
-  describe '#parse!' do
-    subject { parser.parse! }
+  describe '#parse' do
+    subject(:parse) { parser.parse }
 
-    let(:expected_output) do
+    def build_command key, args
+      Command.new key, args
+    end
+
+    let(:expected_result) do
       [
-        { command: 'I', args: [5, 6] },
-        { command: 'L', args: [1, 3, 'A'] },
-        { command: 'V', args: [2, 3, 6, 'W'] },
-        { command: 'H', args: [3, 5, 2, 'Z'] },
-        { command: 'S', args: [] }
+        build_command('I', ['5', '6']),
+        build_command('L', ['1', '3', 'A']),
+        build_command('V', ['2', '3', '6', 'W']),
+        build_command('H', ['3', '5', '2', 'Z']),
+        build_command('S', [])
       ]
     end
 
-    it 'parses file correctly' do
-      is_expected.to match_array expected_output
+    it { is_expected.to match_array expected_result }
+
+    context 'when file contains blank line' do
+      let(:file) { array_to_file(file_content) }
+      let(:file_content) { ['I 5 6', invalid_line] }
+      let(:invalid_line) { '' }
+      let(:expected_result) { [build_command('I', ['5', '6']), nil] }
+      let(:path) { file.path }
+
+      it 'nil for blank line' do
+        is_expected.to match_array expected_result
+      end
     end
   end
 end

@@ -1,8 +1,8 @@
-require_relative 'mixins/command_argument_validations'
+require_relative './mixins/error_logging'
+require_relative './mixins/command_argument_validations'
 
 class Command < Struct.new(:command, :arguments)
-  attr_accessor :errors
-
+  include ErrorLogging
   include CommandArgumentValidations
 
   SUPPORTED_COMMANDS = %w[I C L V H S].freeze
@@ -21,10 +21,6 @@ class Command < Struct.new(:command, :arguments)
   end
 
   private
-
-  def clear_errors
-    @errors = {}
-  end
 
   def command_supported?
     SUPPORTED_COMMANDS.include? command
