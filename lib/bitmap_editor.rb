@@ -21,6 +21,14 @@ class BitmapEditor
     execute_commands
   end
 
+  def image_width
+    image_grid.first.size
+  end
+
+  def image_height
+    image_grid.size
+  end
+
   private
 
   def load_commands
@@ -45,13 +53,13 @@ class BitmapEditor
   end
 
   def colour_pixel(x, y, colour)
-    x_index = coordinate_to_array_index(x)
-    y_index = coordinate_to_array_index(y)
+    x_index = coordinate_to_array_index(x, image_width)
+    y_index = coordinate_to_array_index(y, image_height)
     @image_grid[y_index][x_index] = colour
   end
 
-  def coordinate_to_array_index(coordinate)
-    coordinate -= 1
+  def coordinate_to_array_index(coordinate, limit)
+    (coordinate > limit ? limit : coordinate) - 1
   end
 
   def log_invalid_command(command); end

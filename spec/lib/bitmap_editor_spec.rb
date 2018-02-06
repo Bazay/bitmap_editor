@@ -36,8 +36,8 @@ RSpec.describe BitmapEditor do
 
       before { run }
 
-      it { expect(image.size).to eq height }
-      it { expect(image.first.size).to eq width }
+      it { expect(editor.image_width).to eq width }
+      it { expect(editor.image_height).to eq height }
     end
 
     context "when executing 'L' command" do
@@ -54,6 +54,38 @@ RSpec.describe BitmapEditor do
       before { run }
 
       it { expect(image[y_coordinate - 1][x_coordinate - 1]).to eq colour }
+
+      context 'when x out of bounds' do
+        let(:x_coordinate) { width + 1 }
+
+        it { expect { run }.not_to raise_error }
+      end
+      context 'when y out of bounds' do
+        let(:y_coordinate) { height + 1 }
+
+        it { expect { run }.not_to raise_error }
+      end
+    end
+
+    context "when executing 'V' command" do
+      subject(:image) { editor.image_grid }
+
+      let(:file) { array_to_file(["I #{width} #{height}", "V #{x_coordinate} #{y1_coordinate} #{y1_coordinate} #{colour}"]) }
+      let(:path) { file.path }
+      let(:width) { rand(1..10) }
+      let(:height) { rand(1..10) }
+      let(:x_coordinate) { rand(1..width) }
+      let(:y1_coordinate) { rand(1..height-1) }
+      let(:y2_coordinate) { rand(y1_coordinate..height) }
+      let(:colour) { 'C' }
+
+      before { run }
+
+      it 'colours all vertical blocks' do
+        for y_coordinate in y1_coordinate..y2_coordinate
+          expect(image[y_coordinate - 1][x_coordinate - 1]).to eq colour
+        end
+      end
     end
   end
 end
