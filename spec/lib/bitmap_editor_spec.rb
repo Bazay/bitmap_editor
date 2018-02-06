@@ -30,9 +30,9 @@ RSpec.describe BitmapEditor do
       subject(:image) { editor.image_grid }
 
       let(:file) { array_to_file(["I #{width} #{height}"]) }
-      let(:file_path) { file.path }
-      let(:width) { 5 }
-      let(:height) { 6 }
+      let(:path) { file.path }
+      let(:width) { rand(1..10) }
+      let(:height) { rand(1..10) }
 
       before { run }
 
