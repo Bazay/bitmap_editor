@@ -14,7 +14,6 @@ RSpec.describe BitmapEditor do
     let(:file_line_count) { 5 }
     let(:expected_output) { "OOOOO\nOOZZZ\nAWOOO\nOWOOO\nOWOOO\nOWOOO\n" }
 
-    it { expect { run }.to change { editor.commands.count }.by file_line_count }
     it { expect { run }.to output(expected_output).to_stdout }
 
     context 'when input file is not present' do
