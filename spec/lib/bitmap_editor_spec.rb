@@ -72,10 +72,10 @@ RSpec.describe BitmapEditor do
 
       let(:file) { array_to_file(["I #{width} #{height}", "V #{x_coordinate} #{y1_coordinate} #{y2_coordinate} #{colour}"]) }
       let(:path) { file.path }
-      let(:width) { rand(1..10) + 1 }
+      let(:width) { rand(1..10) }
       let(:height) { rand(1..10) + 1 }
       let(:x_coordinate) { rand(1..width) }
-      let(:y1_coordinate) { rand(1..height-1) }
+      let(:y1_coordinate) { rand(1..height - 1) }
       let(:y2_coordinate) { rand(y1_coordinate..height) }
       let(:colour) { 'C' }
 
@@ -83,6 +83,27 @@ RSpec.describe BitmapEditor do
 
       it 'colours all vertical blocks' do
         for y_coordinate in y1_coordinate..y2_coordinate
+          expect(image[y_coordinate - 1][x_coordinate - 1]).to eq colour
+        end
+      end
+    end
+
+    context "when executing 'H' command" do
+      subject(:image) { editor.image_grid }
+
+      let(:file) { array_to_file(["I #{width} #{height}", "H #{x1_coordinate} #{x2_coordinate} #{y_coordinate} #{colour}"]) }
+      let(:path) { file.path }
+      let(:width) { rand(1..10) + 1 }
+      let(:height) { rand(1..10) }
+      let(:x1_coordinate) { rand(1..width - 1) }
+      let(:x2_coordinate) { rand(x1_coordinate..width) }
+      let(:y_coordinate) { rand(1..height) }
+      let(:colour) { 'C' }
+
+      before { run }
+
+      it 'colours all horizontal blocks' do
+        for x_coordinate in x1_coordinate..x2_coordinate
           expect(image[y_coordinate - 1][x_coordinate - 1]).to eq colour
         end
       end
