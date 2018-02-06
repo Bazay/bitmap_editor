@@ -47,6 +47,7 @@ class BitmapEditor
     when 'L' then colour_pixel(*command.parsed_arguments)
     when 'V' then colour_vertical_pixels(*command.parsed_arguments)
     when 'H' then colour_horizontal_pixels(*command.parsed_arguments)
+    when 'C' then clear_image_grid
     end
   end
 
@@ -77,6 +78,11 @@ class BitmapEditor
       x_index = coordinate_to_array_index(x, image_width)
       @image_grid[y_index][x_index] = colour
     end
+  end
+
+  def clear_image_grid
+    return if @image_grid.nil?
+    @image_grid = Array.new(image_height) { Array.new(image_width, DEFAULT_BLOCK_COLOUR) }
   end
 
   def coordinate_to_array_index(coordinate, limit)
