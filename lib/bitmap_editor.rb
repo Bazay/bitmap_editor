@@ -46,6 +46,7 @@ class BitmapEditor
     when 'I' then build_image_grid(*command.parsed_arguments)
     when 'L' then colour_pixel(*command.parsed_arguments)
     when 'V' then colour_vertical_pixels(*command.parsed_arguments)
+    when 'H' then colour_horizontal_pixels(*command.parsed_arguments)
     end
   end
 
@@ -54,15 +55,26 @@ class BitmapEditor
   end
 
   def colour_pixel(x, y, colour)
+    return if @image_grid.nil?
     x_index = coordinate_to_array_index(x, image_width)
     y_index = coordinate_to_array_index(y, image_height)
     @image_grid[y_index][x_index] = colour
   end
 
   def colour_vertical_pixels(x, y1, y2, colour)
+    return if @image_grid.nil?
     x_index = coordinate_to_array_index(x, image_width)
     for y in y1..y2
       y_index = coordinate_to_array_index(y, image_height)
+      @image_grid[y_index][x_index] = colour
+    end
+  end
+
+  def colour_horizontal_pixels(x1, x2, y, colour)
+    return if @image_grid.nil?
+    y_index = coordinate_to_array_index(y, image_height)
+    for x in x1..x2
+      x_index = coordinate_to_array_index(x, image_width)
       @image_grid[y_index][x_index] = colour
     end
   end
