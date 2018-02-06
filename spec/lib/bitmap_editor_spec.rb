@@ -36,8 +36,24 @@ RSpec.describe BitmapEditor do
 
       before { run }
 
-      it { expect(image.size).to eq height }
-      it { expect(image.first.size).to eq width }
+      it { expect(image.size).to eq width }
+      it { expect(image.first.size).to eq height }
+    end
+
+    context "when executing 'L' command" do
+      subject(:image) { editor.image_grid }
+
+      let(:file) { array_to_file(["I #{width} #{height}", "L #{x_coord} #{y_coord} #{colour}"]) }
+      let(:file_path) { file.path }
+      let(:width) { rand(1..10) }
+      let(:height) { rand(1..10) }
+      let(:x_coordinate) { rand(1..width) }
+      let(:y_coordinate) { rand(1..height) }
+      let(:colour) { 'A' }
+
+      before { run }
+
+      it { expect(image[x_coordinate][y_coordinate]).to eq colour }
     end
   end
 end

@@ -41,7 +41,7 @@ class BitmapEditor
   end
 
   def build_image_grid(width, height)
-    @image_grid = Array.new(height, Array.new(width, DEFAULT_BLOCK_COLOUR))
+    @image_grid = Array.new(width, Array.new(height, DEFAULT_BLOCK_COLOUR))
   end
 
   def log_invalid_command(command); end
