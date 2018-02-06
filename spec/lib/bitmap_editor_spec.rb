@@ -127,5 +127,25 @@ RSpec.describe BitmapEditor do
 
       it { is_expected.to match_array expected_grid }
     end
+
+    context "when executing 'S' command" do
+      subject(:image) { editor.image_grid }
+
+      let(:file) { array_to_file(["I #{width} #{height}", "L #{x_coordinate} #{y_coordinate} #{colour}", 'S']) }
+      let(:path) { file.path }
+      let(:width) { rand(1..10) }
+      let(:height) { rand(1..10) }
+      let(:x_coordinate) { rand(1..width) }
+      let(:y_coordinate) { rand(1..height) }
+      let(:colour) { 'C' }
+      let(:grid) do
+        grid = Array.new(height) { Array.new(width, BitmapEditor::DEFAULT_BLOCK_COLOUR) }
+        grid[y_coordinate - 1][x_coordinate - 1] = colour
+        grid
+      end
+      let(:expected_output) { grid.map { |row| row.join }.join('\n') }
+
+      it { expect { run }.to output(expected_output).to_stdout }
+    end
   end
 end
