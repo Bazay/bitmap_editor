@@ -1,12 +1,11 @@
 require_relative './input_parser'
 require_relative './mixins/error_logging'
+require 'pry'
 
 class BitmapEditor
   attr_reader :input_parser, :commands, :image_grid
 
   DEFAULT_BLOCK_COLOUR = 'O'.freeze
-
-  include ErrorLogging
 
   def initialize(input_file_path)
     @input_parser = InputParser.new input_file_path
@@ -36,9 +35,7 @@ class BitmapEditor
   end
 
   def execute_commands
-    commands.each_with_index do |command, line|      
-      command&.valid? ? run_command(command) : log_invalid_command(command)
-    end
+    commands.each { |command| run_command(command) if command&.valid? }
   end
 
   def run_command(command)
@@ -58,6 +55,7 @@ class BitmapEditor
 
   def colour_pixel(x, y, colour)
     return if @image_grid.nil?
+    return unless in_bounds?(x: x, y: y)
     x_index = coordinate_to_array_index(x, image_width)
     y_index = coordinate_to_array_index(y, image_height)
     @image_grid[y_index][x_index] = colour
@@ -65,6 +63,7 @@ class BitmapEditor
 
   def colour_vertical_pixels(x, y1, y2, colour)
     return if @image_grid.nil?
+    return unless in_bounds?(x: x, y: y1, y2: y2)
     x_index = coordinate_to_array_index(x, image_width)
     for y in y1..y2
       y_index = coordinate_to_array_index(y, image_height)
@@ -74,6 +73,7 @@ class BitmapEditor
 
   def colour_horizontal_pixels(x1, x2, y, colour)
     return if @image_grid.nil?
+    return unless in_bounds?(x: x1, x2: x2, y: y)
     y_index = coordinate_to_array_index(y, image_height)
     for x in x1..x2
       x_index = coordinate_to_array_index(x, image_width)
@@ -87,13 +87,21 @@ class BitmapEditor
   end
 
   def show_image_grid
-    return if @image_grid.nil?
+    return puts("There's no image to show") if @image_grid.nil?
     puts @image_grid.map { |row| row.join }.join("\n")
+  end
+
+  def in_bounds?(x:, y:, x2: nil, y2: nil)
+    if x2
+      (x <= image_width || x2 <= image_width) && y <= image_height
+    elsif y2
+      x <= image_width && (y <= image_height || y2 <= image_height)
+    else
+      x <= image_width && y <= image_height
+    end
   end
 
   def coordinate_to_array_index(coordinate, limit)
     (coordinate > limit ? limit : coordinate) - 1
   end
-
-  def log_invalid_command(command); end
 end

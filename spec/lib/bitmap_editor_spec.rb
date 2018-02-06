@@ -174,9 +174,14 @@ RSpec.describe BitmapEditor do
       end
       let(:expected_output) { "#{grid.map { |row| row.join }.join("\n")}\n" }
 
-      it_behaves_like 'image grid is not initialised'
-
       it { expect { run }.to output(expected_output).to_stdout }
+
+      context 'when image not initialised' do
+        let(:file) { array_to_file(file_content) }
+        let(:file_content) { [command] }
+
+        it { expect { run }.to output("There's no image to show\n").to_stdout }
+      end
     end
   end
 end
