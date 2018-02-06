@@ -37,7 +37,7 @@ RSpec.describe BitmapEditor do
       before { run }
 
       it { expect(image.size).to eq height }
-      it { expect(image[0].size).to eq width }
+      it { expect(image.first.size).to eq width }
     end
   end
 end

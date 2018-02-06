@@ -29,12 +29,20 @@ class BitmapEditor
   end
 
   def execute_commands
-    commands.each_with_index do |command, line|
-      # Do magical things
+    commands.each_with_index do |command, line|      
+      command.valid? ? run_command(command) : log_invalid_command(command)
+    end
+  end
+
+  def run_command(command)
+    case command.command_key
+    when 'I' then build_image_grid(*command.parsed_arguments)
     end
   end
 
   def build_image_grid(width, height)
     @image_grid = Array.new(height, Array.new(width, DEFAULT_BLOCK_COLOUR))
   end
+
+  def log_invalid_command(command); end
 end

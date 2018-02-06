@@ -6,7 +6,7 @@ module CommandArgumentValidations
   private
 
   def expected_arguments_count
-    argument_types[command].count
+    argument_types[command_key].count
   end
 
   def invalid_arguments_count?
@@ -42,7 +42,7 @@ module CommandArgumentValidations
   end
 
   def argument_conditions(position)
-    argument_types[command][position][:conditions]
+    argument_types[command_key][position][:conditions]
   end
 
   def argument_types
@@ -74,7 +74,10 @@ module CommandArgumentValidations
   end
 
   def numeric_argument
-    { conditions: { minimum: ARGUMENT_NUMERIC_MINIMUM, maximum: ARGUMENT_NUMERIC_MAXIMUM } }.freeze
+    {
+      conditions: { minimum: ARGUMENT_NUMERIC_MINIMUM, maximum: ARGUMENT_NUMERIC_MAXIMUM },
+      parse: ->(argument) { argument.to_i }
+    }.freeze
   end
 
   def string_argument

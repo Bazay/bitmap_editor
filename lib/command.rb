@@ -1,7 +1,7 @@
 require_relative './mixins/error_logging'
 require_relative './mixins/command_argument_validations'
 
-class Command < Struct.new(:command, :arguments)
+class Command < Struct.new(:command_key, :arguments)
   include ErrorLogging
   include CommandArgumentValidations
 
@@ -20,10 +20,22 @@ class Command < Struct.new(:command, :arguments)
     errors.none?
   end
 
+  def parsed_arguments
+    @parsed_arguments ||= arguments.each_with_index.map { |argument, index| parse_argument(argument, index) }
+  end
+
   private
 
+  def parse_argument(argument, index)
+    if argument_types[command_key][index].dig(:parse)
+      argument_types[command_key][index][:parse].call(argument)
+    else
+      argument
+    end
+  end
+
   def command_supported?
-    SUPPORTED_COMMANDS.include? command
+    SUPPORTED_COMMANDS.include? command_key
   end
 
   def track_base_error(error)
@@ -37,7 +49,7 @@ class Command < Struct.new(:command, :arguments)
   def build_base_error_message(error)
     case error
     when :command_unsupported
-      "command '#{command}' is not supported"
+      "command '#{command_key}' is not supported"
     when :invalid_arguments_count
       "expected #{expected_arguments_count} arguments but got #{arguments.count}"
     end
