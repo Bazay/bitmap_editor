@@ -4,7 +4,7 @@ require_relative './mixins/error_logging'
 class BitmapEditor
   attr_reader :input_parser, :commands, :image_grid
 
-  DEFAULT_BLOCK_COLOUR = '0'.freeze
+  DEFAULT_BLOCK_COLOUR = 'O'.freeze
 
   include ErrorLogging
 
@@ -37,7 +37,7 @@ class BitmapEditor
 
   def execute_commands
     commands.each_with_index do |command, line|      
-      command.valid? ? run_command(command) : log_invalid_command(command)
+      command&.valid? ? run_command(command) : log_invalid_command(command)
     end
   end
 
@@ -88,7 +88,7 @@ class BitmapEditor
 
   def show_image_grid
     return if @image_grid.nil?
-    puts @image_grid.map { |row| row.join }.join('\n')
+    puts @image_grid.map { |row| row.join }.join("\n")
   end
 
   def coordinate_to_array_index(coordinate, limit)

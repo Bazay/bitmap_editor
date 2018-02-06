@@ -12,8 +12,10 @@ RSpec.describe BitmapEditor do
     subject(:run) { editor.run }
 
     let(:file_line_count) { 5 }
+    let(:expected_output) { "OOOOO\nOOZZZ\nAWOOO\nOWOOO\nOWOOO\nOWOOO\n" }
 
     it { expect { run }.to change { editor.commands.count }.by file_line_count }
+    it { expect { run }.to output(expected_output).to_stdout }
 
     context 'when input file is not present' do
       let(:parser) { double 'InputParser', file_exists?: file_present }
@@ -171,7 +173,7 @@ RSpec.describe BitmapEditor do
         grid[y_coordinate - 1][x_coordinate - 1] = colour
         grid
       end
-      let(:expected_output) { "#{grid.map { |row| row.join }.join('\n')}\n" }
+      let(:expected_output) { "#{grid.map { |row| row.join }.join("\n")}\n" }
 
       it_behaves_like 'image grid is not initialised'
 
